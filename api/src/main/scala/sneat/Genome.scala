@@ -141,7 +141,7 @@ class Genome(val genome_id: Int,
 
             //Create the gene + link
             val new_weight = Util.randposneg * Util.randfloat
-            val newgene = new Gene(newtrait, new_weight, in_node, out_node, flag_recurrent, innov_number, new_weight)
+            val newgene = Gene(newtrait, new_weight, in_node, out_node, flag_recurrent, innov_number, new_weight)
 
             //Add the gene to the genome
             genes.append(newgene)
@@ -213,7 +213,7 @@ class Genome(val genome_id: Int,
       val assoc_trait = findTraitIn(traits_dup, _gene.lnk.linktrait)
 
       // creation of new gene with a pointer to new node
-      new Gene(_gene, assoc_trait, inode, onode)
+      Gene(_gene, assoc_trait, inode, onode)
     }
 
     // okay all nodes created, the new genome can be generate
@@ -521,7 +521,7 @@ class Genome(val genome_id: Int,
       from_gene.lnk.linktrait.trait_id - first_traitnum
     val newtrait = newtraits(traitnum)
 
-    new Gene(from_gene, newtrait, new_inode, new_onode)
+    Gene(from_gene, newtrait, new_inode, new_onode)
   }
 
   // Check to see if the chosengene conflicts with an already chosen gene
@@ -938,7 +938,7 @@ class Genome(val genome_id: Int,
 
       val new_gene = if (innov_opt.isDefined) {
         val _innov: Innovation = innov_opt.get
-        new Gene(traits(_innov.new_traitnum), _innov.new_weight, thenode1, thenode2, do_recur, _innov.innovation_num1, 0)
+        Gene(traits(_innov.new_traitnum), _innov.new_weight, thenode1, thenode2, do_recur, _innov.innovation_num1, 0)
       }
       else {
         // Choose a random trait
@@ -953,7 +953,7 @@ class Genome(val genome_id: Int,
         val curr_innov = pop.getCurr_innov_num_and_increment
 
         // create the new gene
-        val tmp_gene = new Gene(traits(traitnum), new_weight, thenode1, thenode2, do_recur, curr_innov, new_weight)
+        val tmp_gene = Gene(traits(traitnum), new_weight, thenode1, thenode2, do_recur, curr_innov, new_weight)
 
         // add the innovation
         pop.innovations.append(new LinkInnovation(thenode1.node_id, thenode2.node_id, curr_innov, new_weight, traitnum))
@@ -1020,8 +1020,8 @@ class Genome(val genome_id: Int,
         // pass this current nodeid to newnode
         new_node = new NNode(NeatConstant.NEURON, _innov.newnode_id, NeatConstant.HIDDEN, traits.head)
 
-        newgene1 = new Gene(traitptr, 1.0, in_node, new_node, thelink.is_recurrent, _innov.innovation_num1, 0)
-        newgene2 = new Gene(traitptr, oldweight, new_node, out_node, false, _innov.innovation_num2, 0)
+        newgene1 = Gene(traitptr, 1.0, in_node, new_node, thelink.is_recurrent, _innov.innovation_num1, 0)
+        newgene2 = Gene(traitptr, oldweight, new_node, out_node, false, _innov.innovation_num2, 0)
       }
       else {
         // The innovation is totally novel
@@ -1038,13 +1038,13 @@ class Genome(val genome_id: Int,
         val gene_innov1 = pop.getCurr_innov_num_and_increment
 
         // create gene with the current gene inovation
-        newgene1 = new Gene(traitptr, 1.0, in_node, new_node, thelink.is_recurrent, gene_innov1, 0)
+        newgene1 = Gene(traitptr, 1.0, in_node, new_node, thelink.is_recurrent, gene_innov1, 0)
 
         // re-read the current innovation with increment
         val gene_innov2 = pop.getCurr_innov_num_and_increment
 
         // create the second gene with this innovation incremented
-        newgene2 = new Gene(traitptr, oldweight, new_node, out_node, false, gene_innov2, 0)
+        newgene2 = Gene(traitptr, oldweight, new_node, out_node, false, gene_innov2, 0)
         pop.innovations.append(new NodeInnovation(in_node.node_id, out_node.node_id, gene_innov1, gene_innov2, new_node.node_id, _gene.innovation_num))
       }
 

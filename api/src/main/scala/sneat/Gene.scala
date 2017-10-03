@@ -26,24 +26,9 @@ import scala.collection.mutable.ArrayBuffer
   * @param innovation_num is historical marking of node
   * @param mutation_num how much mutation has changed the link
   * @param enable is a flag: is TRUE the gene is enabled FALSE otherwise.
+  * @param lnk is a reference to object for identify input/output node and features
   */
-class Gene(val innovation_num: Double, var mutation_num: Double, var enable: Boolean) extends Neat {
-  /**
-    * if a reference to object for identify input/output node and features
-    */
-  var lnk: Link = null
-
-  def this(g: Gene, tp: Trait, inode: NNode, onode: NNode) {
-    this(g.innovation_num, g.mutation_num, g.enable)
-    lnk = new Link(g.lnk.weight, inode, onode, g.lnk.is_recurrent, tp)
-  }
-
-
-  def this(tp: Trait, w: Double, inode: NNode, onode: NNode, recur: Boolean, innov: Double, mnum: Double, enable: Boolean = true) {
-    this(innov, mnum, enable)
-    lnk = new Link(w, inode, onode, recur, tp)
-  }
-
+class Gene(val innovation_num: Double, var mutation_num: Double, var enable: Boolean, val lnk: Link) extends Neat {
   def geneEquals(that: Gene): Boolean = {
     this.lnk.in_node.node_id == that.lnk.in_node.node_id &&
       this.lnk.out_node.node_id == that.lnk.out_node.node_id &&
@@ -55,19 +40,30 @@ class Gene(val innovation_num: Double, var mutation_num: Double, var enable: Boo
     val fmt03 = new DecimalFormat(mask03)
     val mask5 = " 0000"
     val fmt5 = new DecimalFormat(mask5)
+
     print("\n [Link (" + fmt5.format(lnk.in_node.node_id))
     print("," + fmt5.format(lnk.out_node.node_id))
     print("]  innov (" + fmt5.format(innovation_num))
     print(", mut=" + fmt03.format(mutation_num) + ")")
     print(" Weight " + fmt03.format(lnk.weight))
+
     if (lnk.linktrait != null) print(" Link's trait_id " + lnk.linktrait.trait_id)
     if (enable == false) print(" -DISABLED-")
     if (lnk.is_recurrent) print(" -RECUR-")
   }
-
 }
 
 object Gene {
+  def apply(g: Gene, tp: Trait, inode: NNode, onode: NNode) = {
+    val lnk = new Link(g.lnk.weight, inode, onode, g.lnk.is_recurrent, tp)
+    new Gene(g.innovation_num, g.mutation_num, g.enable, lnk)
+  }
+
+  def apply(tp: Trait, w: Double, inode: NNode, onode: NNode, recur: Boolean, innov: Double, mnum: Double, enable: Boolean = true) = {
+    val lnk = new Link(w, inode, onode, recur, tp)
+    new Gene(innov, mnum, enable, lnk)
+  }
+
   def apply(xline: String, traits: ArrayBuffer[Trait], nodes: ArrayBuffer[NNode]) : Gene = {
 
     val arr = xline.split("\\s+")
@@ -98,11 +94,12 @@ object Gene {
     // Get enable
     val enable = if (arr(8).toInt == 1) true else false
 
-    val traitptr = traits.find(_.trait_id == trait_num).orNull
-    val inode = nodes.find(_.node_id == inode_num).orNull
-    val onode = nodes.find(_.node_id == onode_num).orNull
+    val trait_ptr = traits.find(_.trait_id == trait_num).orNull
+    val in_node = nodes.find(_.node_id == inode_num).orNull
+    val out_node = nodes.find(_.node_id == onode_num).orNull
 
-    new Gene(traitptr, weight, inode, onode, recur, innovation_num, mutation_num, enable)
+    val lnk = new Link(weight, in_node, out_node, recur, trait_ptr)
+    new Gene(innovation_num, mutation_num, enable, lnk)
   }
 
   def create_avg_gene(_p1gene: Gene, _p2gene: Gene): Gene = {
@@ -120,7 +117,8 @@ object Gene {
     val innov_num = _p1gene.innovation_num
     val mutation_num = (_p1gene.mutation_num + _p2gene.mutation_num) / 2.0
 
-    new Gene(lnktrait, weight, in_node, out_node, ir_recur, innov_num, mutation_num, true)
+    val lnk = new Link(weight, in_node, out_node, ir_recur, lnktrait)
+    new Gene(innov_num, mutation_num, true, lnk)
   }
 
   def print_to_file(g: Gene, printWriter: PrintWriter): Unit = {
