@@ -133,6 +133,6 @@ object XOR {
     else
       println(" error in read ")
 
-    XOR(150, false, 50)
+    XOR(150, false, 250)
   }
 }

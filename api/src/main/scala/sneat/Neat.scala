@@ -15,8 +15,6 @@
 
 package sneat
 
-trait Neat
-
 
 /**
   * Is a superclass for definition of all parameters , threshold and others values.

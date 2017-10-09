@@ -28,7 +28,7 @@ import scala.collection.mutable.ArrayBuffer
   * @param enable is a flag: is TRUE the gene is enabled FALSE otherwise.
   * @param lnk is a reference to object for identify input/output node and features
   */
-class Gene(val innovation_num: Double, var mutation_num: Double, var enable: Boolean, val lnk: Link) extends Neat {
+class Gene(val innovation_num: Double, var mutation_num: Double, var enable: Boolean, val lnk: Link) {
   def geneEquals(that: Gene): Boolean = {
     this.lnk.in_node.node_id == that.lnk.in_node.node_id &&
       this.lnk.out_node.node_id == that.lnk.out_node.node_id &&

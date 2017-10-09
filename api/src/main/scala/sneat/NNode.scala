@@ -31,7 +31,7 @@ import scala.collection.mutable.ArrayBuffer
   * @param nodetrait Points to a trait of parameters
   */
 class NNode(val node_type: Int, val node_id: Int, val gen_node_label: Int = NeatConstant.HIDDEN,
-            var nodetrait: Trait = null) extends Neat {
+            var nodetrait: Trait = null) {
   var inner_level = 0
   var is_traversed = false
   /**

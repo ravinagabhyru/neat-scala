@@ -26,7 +26,7 @@ package sneat
   * nodes fully specify the innovation and where it must have
   * occured.  (Between them)
   */
-trait Innovation extends Neat {
+trait Innovation {
   /**
     * Two nodes specify where the innovation took place : this is the node input
     */

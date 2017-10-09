@@ -22,7 +22,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * A Population is a group of Organisms including their species
   */
-class Population() extends Neat {
+class Population() {
   /**
     * The organisms in the Population
     */
@@ -66,11 +66,11 @@ class Population() extends Neat {
   /**
     * Current label number available for nodes
     */
-  var cur_node_id = 0
+  private var cur_node_id = 0
   /**
     * Current  number of innovation
     */
-  var cur_innov_num = .0
+  private var cur_innov_num = .0
 
   var CURR_ORGANISM_CHAMPION : Organism = null
   var MIN_ERROR = 0.0
@@ -273,7 +273,7 @@ class Population() extends Neat {
     val sorted_species = species.sortWith { (_sx, _sy) =>
       val _ox = _sx.organisms.head
       val _oy = _sy.organisms.head
-      if (_ox.orig_fitness < _oy.orig_fitness) false else true
+      _ox.orig_fitness >= _oy.orig_fitness
     }
 
     // sorted species has all species ordered : the species with orig_fitness maximum is first
@@ -561,7 +561,6 @@ class Population() extends Neat {
     cur_innov_num - 1
   }
 
-
   /**
     * Debug Population
     * Note: This checks each genome by verifying each one
@@ -573,16 +572,19 @@ class Population() extends Neat {
 }
 
 object Population {
+
   def run(pop: Population, numGenerations: Int, reporter: Reporter)(evaluate: Organism => Boolean) = {
     pop.verify()
 
-    for (generation <- 1 to numGenerations) {
+    // reproduce until a winner is found or up to numGenertions
+    var foundWinner = false
+    for (generation <- 1 to numGenerations if foundWinner == false) {
       reporter.startGeneration(pop, generation)
 
-      // Evaluate each organism
-      pop.organisms foreach ( _organism => evaluate(_organism) )
+      // Evaluate each organism in parallel
+      foundWinner = pop.organisms.foldLeft(foundWinner)((found, _organism) => found || evaluate(_organism))
 
-      // compute average and max fitness for each species
+      // compute average and max fitness for each species in parallel
       pop.species foreach {_specie =>
         _specie.compute_average_fitness()
         _specie.compute_max_fitness()

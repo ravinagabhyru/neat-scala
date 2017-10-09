@@ -26,8 +26,7 @@ package sneat
   * @param linktrait Points to a trait of parameters for genetic creation.
   *                  Is  link-related parameters that change during Hebbian type learning.
   */
-class Link(var weight: Double, val in_node: NNode, val out_node: NNode, val is_recurrent: Boolean, var linktrait: Trait = null)
-  extends Neat {
+class Link(var weight: Double, val in_node: NNode, val out_node: NNode, val is_recurrent: Boolean, var linktrait: Trait = null) {
   /**
     * this is a flag; if TRUE the connection(link) is tapped(delayed); FALSE otherwise;
     */

@@ -20,7 +20,7 @@ import java.text.DecimalFormat
 
 import scala.collection.mutable.ArrayBuffer
 
-class Species(val id: Int, var novel: Boolean = false) extends Neat {
+class Species(val id: Int, var novel: Boolean = false) {
   /**
     * The age of the Species
     */

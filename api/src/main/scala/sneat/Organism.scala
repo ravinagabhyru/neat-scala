@@ -22,7 +22,7 @@ package sneat
   * @param genome The Organism's genotype
   * @param generation Tells which generation this Organism is from
   */
-class Organism(var fitness: Double, val genome: Genome, val generation: Int) extends Neat {
+class Organism(var fitness: Double, val genome: Genome, val generation: Int) {
   /**
     * Win marker (if needed for a particular task)
     */

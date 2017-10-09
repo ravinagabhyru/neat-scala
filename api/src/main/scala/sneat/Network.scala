@@ -28,9 +28,7 @@ import scala.collection.mutable.ArrayBuffer
   * @param net_id   Numeric identification of this network
   */
 class Network(val inputs: ArrayBuffer[NNode], val outputs: ArrayBuffer[NNode],
-              val allnodes: ArrayBuffer[NNode], var net_id: Int)
-
-  extends Neat {
+              val allnodes: ArrayBuffer[NNode], var net_id: Int) {
   /**
     * is a reference to genotype can has  originate this fenotype
     */

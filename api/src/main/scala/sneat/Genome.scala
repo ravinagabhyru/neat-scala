@@ -32,7 +32,7 @@ import scala.collection.mutable.ArrayBuffer
 class Genome(val genome_id: Int,
              val traits: ArrayBuffer[Trait] = ArrayBuffer[Trait](),
              val nodes: ArrayBuffer[NNode] = ArrayBuffer[NNode](),
-             val genes: ArrayBuffer[Gene] = ArrayBuffer[Gene]()) extends Neat {
+             val genes: ArrayBuffer[Gene] = ArrayBuffer[Gene]()) {
   /**
     * note are two String for store statistics information
     * when genomes are readed (if exist : null otherwise);
