@@ -5,3 +5,5 @@ trait Reporter {
   def endGeneration(pop: Population, generation: Int) = ()
   def afterEvaluate(pop: Population, generation: Int) = ()
 }
+
+class NullReporter extends Reporter

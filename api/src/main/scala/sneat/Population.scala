@@ -573,7 +573,7 @@ class Population() {
 
 object Population {
 
-  def run(pop: Population, numGenerations: Int, reporter: Reporter)(evaluate: Organism => Boolean) = {
+  def run(pop: Population, numGenerations: Int, reporter: Reporter = new NullReporter)(evaluate: Organism => Boolean) = {
     pop.verify()
 
     // reproduce until a winner is found or up to numGenertions
