@@ -120,7 +120,7 @@ class Population() {
     cur_innov_num = (i + o + nmax) * (i + o + nmax) + 1
     //		 print("\n  The first  node_id  available is "+cur_node_id);
     //		 print("\n  The first innov_num available is "+cur_innov_num);
-    speciate()
+    speciate(organisms)
 
     // backup of population
 //    fname_prefix = Population.getJneatFileData(Population.NAME_CURR_POPULATION)
@@ -157,7 +157,7 @@ class Population() {
           cur_innov_num = new_genome.get_last_gene_innovnum
       }
     }
-    speciate()
+    speciate(organisms)
   }
 
   def getCur_node_id: Int = cur_node_id
@@ -183,7 +183,7 @@ class Population() {
     cur_innov_num = newgenome.get_last_gene_innovnum
 
     // Separate the new Population into species
-    speciate()
+    speciate(organisms)
   }
 
   def viewtext(): Unit = {
@@ -461,12 +461,13 @@ class Population() {
 
     // print("\n verifica");
     // print("\n this species has "+sorted_species.size()+" elements");
-    sorted_species foreach (_.reproduce(generation, this, sorted_species))
+    val newOrganisms = sorted_species flatMap (_.reproduce(generation, this, sorted_species))
+    speciate(newOrganisms)
 
     //   	print("\n Reproduction completed");
     // Destroy and remove the old generation from the organisms and species
     // (because we have pointer to organisms , the new organisms created
-    //  are not in organisms and can't br eliminated;
+    //  are not in organisms and can't be eliminated;
     // thus are elimate onlyu corrent organisms !)
     organisms foreach {_organism => _organism.species.remove_org(_organism)}
     organisms.clear()
@@ -515,9 +516,7 @@ class Population() {
     //   	print("\n Epoch complete");
   }
 
-  def speciate(): Unit = {
-    species.clear()
-
+  def speciate(organisms: Seq[Organism]): Unit = {
     organisms foreach {_organism =>
       val specie_opt =  species find {_specie =>
         val compare_org = _specie.organisms.head
@@ -528,16 +527,16 @@ class Population() {
         (curr_compat < Neat.p_compat_threshold)
       }
 
-      val newspecies = specie_opt.getOrElse {
+      val newSpecies = specie_opt.getOrElse {
         val newspecies = new Species(Species.get_next_species_num)
         species.append(newspecies)
         newspecies
       }
 
-      newspecies.add_Organism(_organism)
+      newSpecies.add_Organism(_organism)
 
       // update in organism pointer to its species
-      _organism.species = newspecies
+      _organism.species = newSpecies
     }
   }
 

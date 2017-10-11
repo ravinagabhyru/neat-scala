@@ -245,13 +245,13 @@ class Species(val id: Int, var novel: Boolean = false) {
     mut_struct_baby
   }
 
-  def reproduce(generation: Int, pop: Population, sorted_species: ArrayBuffer[Species]): Boolean = {
+  def reproduce(generation: Int, pop: Population, sorted_species: ArrayBuffer[Species]): Seq[Organism] = {
     // When a Species is found
     var champ_done = false
 
     if ((expected_offspring > 0) && organisms.isEmpty) {
       print("\n ERROR:  ATTEMPT TO REPRODUCE OUT OF EMPTY SPECIES")
-      return false
+      return Seq()
     }
 
     // elements for this specie
@@ -260,7 +260,7 @@ class Species(val id: Int, var novel: Boolean = false) {
     // the champion of the 'this' specie is the first element of the specie;
     val thechamp = organisms.head
 
-    for (count <- 0 until expected_offspring) {
+    val newOrganisms = (0 until expected_offspring) map { count =>
       var baby: Organism = null
       var mut_struct_baby = false
       var mate_baby = false
@@ -370,31 +370,11 @@ class Species(val id: Int, var novel: Boolean = false) {
       baby.mut_struct_baby = mut_struct_baby
       baby.mate_baby = mate_baby
 
-      // Add the baby to its proper Species
-      // If it doesn't fit a Species, create a new one
-      val compatSpecies: Option[Species] = pop.species find { _specie =>
-        val compare_org = _specie.organisms.head
-
-        // compare organism' with first organism in current specie
-        val curr_compat = baby.genome.compatibility(compare_org.genome)
-
-        curr_compat < Neat.p_compat_threshold
-      }
-
-      val _specie = compatSpecies getOrElse {
-        val newspecies = new Species(Species.get_next_species_num, true)
-        pop.species.append(newspecies)
-        newspecies
-      }
-
-      // add the organsim to the compatible species or a newly created one
-      _specie.add_Organism(baby)
-      // update in baby pointer to its species
-      baby.species = _specie
+      baby
     }
-    true
-  }
 
+    newOrganisms
+  }
 }
 
 object Species {
