@@ -30,7 +30,7 @@ Clone this repository and compile in sbt and execute the XOR example
 
 
 ```
-git clone <>
+git clone https://github.com/ravinagabhyru/neat-scala.git 
 sbt compile
 sbt examples/run
 ```
