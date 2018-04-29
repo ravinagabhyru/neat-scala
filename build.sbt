@@ -2,7 +2,7 @@ name := "neat-scala"
 
 version := "0.0.1"
 
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.4"
 
 lazy val all = (project in file("."))
   .aggregate(api, examples)
